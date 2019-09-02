@@ -1,3 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="site" ng-controller="siteCtrl">
+    <head>
+        <meta charset="utf-8"/>
+        
+        <link rel="stylesheet" href="../node_modules/w3-css/3/w3.css"/>
+        <script src="../node_modules/angular/angular.min.js"></script>
+        <script src="../js/escript.js"></script>
+
+        <title ng-bind="titulo"></title>
+    </head>
+    <body>
+
 <?php
 
 require 'Banco.php';
@@ -59,7 +72,7 @@ class Pessoa{
     }
     
     public function inserirPessoa(){        
-        $sql = "INSERT INTO pessoa(id, nome, email, senha, telefone) VALUES(:id, :nome, :email, :senha, :telefone)";
+        $sql = "INSERT INTO pessoa(id, nome, email, telefone, senha) VALUES(:id, :nome, :email, :telefone, :senha)";
         return $this->banco->inserir($sql, $this->getPessoa());
     }
 
@@ -67,26 +80,55 @@ class Pessoa{
         $sql = "SELECT * FROM pessoa";
         return $this->banco->selecionar($sql);
     }
+
+    public function contarPessoas(){
+        $sql = "SELECT count(id) as pessoas FROM pessoa";
+        return $this->banco->selecionar($sql);
+    }
+
+    public function listarPessoa($id){
+        $sql = "SELECT * FROM pessoa WHERE id=:id";
+        $arrayDeDados = array(':id' => $id);
+        return $this->banco->selecionarWhere($sql, $arrayDeDados);
+    }
 }
 
-$pessoa = new Pessoa();
+
 $metodo = $_SERVER['REQUEST_METHOD'];
 
 
 switch($metodo){
     case "GET":
-        $lista_de_pessoas = $pessoa->listarPessoas();
-        echo '<label for="nomeDaPessoa">Escolha o cliente:</label>';
-        echo '<select class="w3-select" name="nomeDaPessoa" id="nomeDaPessoa" autofocus required>';
-        echo '<option value="">Selecione</option>';
-        while($linha = $lista_de_pessoas->fetch(PDO::FETCH_ASSOC)){
-            echo '<option value="'.$linha['id'].'>';
-                echo $linha['nome'];
-            echo '</option>';
-        }        
-        echo '</select>';    
+        if(!isset($_GET['id'])){
+            function listaDePessoas(){
+                $pessoa = new Pessoa();
+                $lista_de_pessoas = $pessoa->listarPessoas();
+                echo '<label for="nomeDaPessoa">Escolha o cliente:</label>';
+                echo '<select class="w3-select" name="nomeDaPessoa" id="nomeDaPessoa" autofocus required>';
+                echo '<option value="">Selecione</option>';
+                while($linha = $lista_de_pessoas->fetch(PDO::FETCH_ASSOC)){
+                    echo '<option value="'.$linha['id'].'">';
+                        echo $linha['nome'];
+                    echo '</option>';
+                }        
+                echo '</select>';
+            }  
+            
+        }
+        else{
+            $id = $_GET['id'];
+            function listaPessoa($id){
+                $pessoa = new Pessoa();
+                $lista_de_pessoa = $pessoa->listarPessoa($id);
+                while($linha = $lista_de_pessoa->fetch(PDO::FETCH_ASSOC)){
+                    echo '<p><b>Nome:</b> '.$linha['nome']. '</p>';
+                }        
+            }
+            listaPessoa($id);
+        }
     break;
     case "POST":
+        $pessoa = new Pessoa();
         $nome = $_POST['nome'];
         $email = $_POST['email'];
         $senha = $_POST['senha'];
@@ -122,6 +164,10 @@ switch($metodo){
             echo '<p class="w3-red w3-center">Volte e tente novamente, pois ocorreu aum erro ao inseir.</p>';
         }
     break;
+
 }
 
 ?>
+
+</body>
+</html>

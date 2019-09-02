@@ -1,0 +1,1 @@
+select ((altura * largura) * 147.30) + (char_length(frase) * 0.32) as custo_placa from placa where id=;

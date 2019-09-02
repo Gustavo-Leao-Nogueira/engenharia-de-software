@@ -4,12 +4,17 @@
         <meta charset="utf-8"/>
         
         <link rel="stylesheet" href="../node_modules/w3-css/3/w3.css"/>
+        <link rel="stylesheet" href="../css/estilo.css">
+
         <script src="../node_modules/angular/angular.min.js"></script>
         <script src="../js/escript.js"></script>
 
         <title ng-bind="titulo"></title>
     </head>
     <body>
+
+  
+
     
     <h1 class="w3-center" ng-bind="titulo"></h1>
     <div class="w3-padding">
@@ -47,15 +52,18 @@
             <h2 class="w3-center w3-light-green w3-padding">
                 Cadastro de Placa:
             </h2>
-            <div class="w3-border w3-margin w3-round w3-padding w3-white w3-card-4 w3-display-topright" >
-                <h2 class="w3-center" ng-if="!frase" ng-bind="fraseInicial"></h2>
-                <h2 class="w3-center" ng-if="frase" ng-bind="frase"></h2>
-            </div>   
+             
+            <div class="w3-border w3-margin w3-white w3-card-4">           
+                <div ng-class="[corDeInicio, corDeFundo, corDeTexto]" class="w3-round w3-padding">
+                    <h2 class="w3-center w3-text-gray" ng-if="!frase" ng-bind="fraseInicial"></h2>
+                    <h2 class="w3-center" ng-if="frase" ng-bind="frase"></h2>
+                </div>
+            </div> 
 
             <div class="w3-padding w3-row-padding ">
                 
                 <div class="w3-half">
-                    <?php require '../backend/Pessoa.php'; ?>
+                    <?php require '../backend/Pessoa.php'; listaDePessoas(); ?>
                     
                     <fieldset>
                         <legend>Tamanho da placa:</legend>
@@ -69,8 +77,8 @@
                         <input type="number" class="w3-input" name="largura" id="largura" required/>
                     </fieldset>
                     <br>
-                <input type="submit" class="w3-green w3-button w3-round" value="Enviar" />            
-                <input type="reset" class="w3-red w3-button w3-round" value="Limpar" /> 
+                <input type="submit" class="w3-green w3-button w3-round" value="Enviar"  />            
+                <input type="reset" class="w3-red w3-button w3-round" value="Limpar" ng-click="corDeFundo = 'branco'; corDeTexto = 'preto'; frase = ''" /> 
                 </div>
                 <div class="w3-half">
                 <label for="frase">
@@ -84,19 +92,20 @@
                         <label for="corDeFundo">
                             Selecione a cor de fundo da placa:
                         </label>
-                        <select class="w3-select" name="corDeFundo" id="corDeFundo" required>
-                            <option value="white">Branca</option>
-                            <option value="light-gray">Cinza</option>
+                        <select class="w3-select" name="corDeFundo" id="corDeFundo" ng-model="corDeFundo" ng-value="branco" required>
+                            <option value="branco">Branca</option>
+                            <option value="cinza">Cinza</option>
                         </select>
+
                         <label for="corDeTexto">
                             Selecione a cor de texto da placa:
                         </label>
-                        <select class="w3-select" name="corDeTexto" id="corDeTexto" required>
-                            <option value="black">Preta</option>
-                            <option value="yellow">Amarelo</option>
-                            <option value="blue">Azul</option>
-                            <option value="green">Verde</option>
-                            <option value="red">Vermelho</option>
+                        <select class="w3-select" name="corDeTexto" id="corDeTexto" ng-model="corDeTexto" ng-value="preto" required>
+                            <option value="preto">Preta</option>
+                            <option value="amarelo">Amarelo</option>
+                            <option value="azul">Azul</option>
+                            <option value="verde">Verde</option>
+                            <option value="vermelho">Vermelho</option>
                         </select>
                     </fieldset>
 
@@ -105,7 +114,9 @@
 
                  
             </div>
+            
 
+            
         </form>
     </div>
 

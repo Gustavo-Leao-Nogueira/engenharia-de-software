@@ -48,6 +48,23 @@ class Banco{
             return false;
         }
     }
+    public function selecionarWhere($sql, $arrayDeDados){
+        try{
+            if($this->isConectado() == false){
+                $this->status = $this->conectado();      
+            }
+            else{
+                $conexao = $this->conexao->prepare($sql);
+                $conexao->execute($arrayDeDados);
+                return $conexao;
+            }
+        }catch(PDOException $error){
+            echo '<p class="w3-red w3-center">';
+                echo 'Erro:'.$error->getMessage();
+            echo '</p>';
+            return false;
+        }
+    }
     public function inserir($sql, $arrayDeDados){
         try{
             if($this->isConectado() == false){
